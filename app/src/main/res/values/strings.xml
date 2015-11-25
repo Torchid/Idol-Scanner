@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Idol Scanner</string>
+
+    <!--Interface Labels-->
+    <string name="idol_0">Idol 0</string>
+    <string name="idol_1">Idol 1</string>
+    <string name="idol_2">Idol 2</string>
+    <string name="receiver">Receiver</string>
+
+    <!--Keywords-->
+    <string name="key0">ghost</string>
+    <string name="key1">dragon</string>
+    <string name="key2">witch</string>
+    <string name="title_activity_receiver">ReceiverActivity</string>
+    <string name="title_activity_scanner">ScannerActivity</string>
+</resources>
