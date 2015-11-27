@@ -16,3 +16,4 @@ public class ReceiverActivity extends AppCompatActivity {
     }
 
 }
+

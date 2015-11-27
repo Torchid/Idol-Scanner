@@ -3,13 +3,20 @@ package com.direyorkie.idolscanner;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcF;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class ScannerActivity extends AppCompatActivity {
 
@@ -21,7 +28,10 @@ public class ScannerActivity extends AppCompatActivity {
     private PendingIntent mPendingIntent;
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
-    private TextView mText;
+    private TextView scanMsgText,
+                     tagMsgText,
+                     tagDataText,
+                     sendMsgText;
     private int mCount = 0;
 
     @Override
@@ -33,9 +43,22 @@ public class ScannerActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mText = (TextView) findViewById(R.id.text);
-        mText.setText("Scan a tag");
+        setupContainerViews();
 
+        scanMsgText.setText(R.string.scanning);
+
+        setupNFCIntentFiltering();
+    }
+
+    private void setupContainerViews() {
+        //Grab all container views from the layout
+        scanMsgText = (TextView) findViewById(R.id.scan_msg);
+        tagMsgText = (TextView) findViewById(R.id.tag_msg);
+        tagDataText = (TextView) findViewById(R.id.tag_data);
+        sendMsgText = (TextView) findViewById(R.id.send_msg);
+    }
+
+    private void setupNFCIntentFiltering() {
         mAdapter = NfcAdapter.getDefaultAdapter(this);
 
         // Create a generic PendingIntent that will be deliver to this activity. The NFC stack
@@ -54,11 +77,9 @@ public class ScannerActivity extends AppCompatActivity {
         catch (IntentFilter.MalformedMimeTypeException e) {
             throw new RuntimeException("fail", e);
         }
+
         mFilters = new IntentFilter[] {ndef, };
-
         mTechLists = new String[][] { new String[] { NfcF.class.getName() } };
-
-       // readTag();
     }
 
     @Override
@@ -71,7 +92,65 @@ public class ScannerActivity extends AppCompatActivity {
     @Override
     public void onNewIntent(Intent intent) {
         Log.i("Foreground dispatch", "Discovered tag with intent: " + intent);
-        mText.setText("Discovered tag " + ++mCount + " with intent: " + intent);
+        tagMsgText.setText("Discovered tag " + ++mCount + " with intent: " + intent);
+
+        NdefMessage[] msgs = new NdefMessage[0];
+
+        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+        if (rawMsgs != null) {
+            msgs = new NdefMessage[rawMsgs.length];
+            for (int i = 0; i < rawMsgs.length; i++) {
+                msgs[i] = (NdefMessage) rawMsgs[i];
+            }
+        }
+
+        //String tagMsg = readTag((Tag) intent.getParcelableExtra(NfcAdapter.EXTRA_TAG));
+        if(msgs.length > 0) {
+            NdefRecord[] records = msgs[0].getRecords();
+            String msg = "";
+            //tagDataText.setText(msgs[0].toString());
+            for (NdefRecord ndefRecord : records) {
+                if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
+                    try {
+                        msg = readText(ndefRecord);
+                    } catch (UnsupportedEncodingException e) {
+                        Log.e(TAG, "Unsupported Encoding", e);
+                    }
+                }
+            }
+
+            if(msg != "")
+            {
+                tagDataText.setText("KeyWord: " + msg);
+            }
+
+        }
+    }
+
+    private String readText(NdefRecord record) throws UnsupportedEncodingException {
+        /*
+         * See NFC forum specification for "Text Record Type Definition" at 3.2.1
+         *
+         * http://www.nfc-forum.org/specs/
+         *
+         * bit_7 defines encoding
+         * bit_6 reserved for future use, must be 0
+         * bit_5..0 length of IANA language code
+         */
+
+        byte[] payload = record.getPayload();
+
+        // Get the Text Encoding
+        //StandardCharsets textEncoding = (((payload[0] & 128) == 0) ? StandardCharSets.UTF-8 : StandardCharsets.);
+
+        // Get the Language Code
+        int languageCodeLength = payload[0] & 0063;
+
+        // String languageCode = new String(payload, 1, languageCodeLength, "US-ASCII");
+        // e.g. "en"
+
+        // Get the Text
+        return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, StandardCharsets.UTF_8);
     }
 
     @Override
@@ -79,4 +158,5 @@ public class ScannerActivity extends AppCompatActivity {
         super.onPause();
         if (mAdapter != null) mAdapter.disableForegroundDispatch(this);
     }
+
 }

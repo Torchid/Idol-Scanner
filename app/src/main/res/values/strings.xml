@@ -6,6 +6,7 @@
     <string name="idol_1">Idol 1</string>
     <string name="idol_2">Idol 2</string>
     <string name="receiver">Receiver</string>
+    <string name="scanning">Scanning for NFC tag...</string>
 
     <!--Keywords-->
     <string name="key0">ghost</string>
