@@ -46,7 +46,8 @@ public class ReceiverActivity extends AppCompatActivity {
         mChannel = mManager.initialize(this, getMainLooper(), null);
     }
 
-    protected void onResume(Bundle savedInstanceState) {
+    @Override
+    public void onResume() {
         super.onResume();
         if(mReceiver == null) {
             mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
@@ -66,35 +67,7 @@ public class ReceiverActivity extends AppCompatActivity {
 
 
 
-        WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
 
-            List peers = new ArrayList();
-            @Override
-            public void onPeersAvailable(WifiP2pDeviceList peerList) {
-
-                // Out with the old, in with the new.
-                peers.clear();
-                peers.addAll(peerList.getDeviceList());
-
-                if (peers.size() == 0) {
-                    Log.d(TAG, "No devices found");
-                    return;
-                }
-                else {
-                    Log.i(TAG, "Peers were found");
-                }
-            }
-        };
-
-//        if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-//
-//            // request available peers from the wifi p2p manager. This is an
-//            // asynchronous call and the calling activity is notified with a
-//            // callback on PeerListListener.onPeersAvailable()
-//            if (mManager != null) {
-//                mManager.requestPeers(mChannel, myPeerListListener);
-//            }
-//        }
     }
 
     /* unregister the broadcast receiver */
