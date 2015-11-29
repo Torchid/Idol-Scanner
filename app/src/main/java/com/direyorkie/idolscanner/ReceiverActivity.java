@@ -48,35 +48,23 @@ public class ReceiverActivity extends AppCompatActivity {
 
     protected void onResume(Bundle savedInstanceState) {
         super.onResume();
-
-        mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
-        registerReceiver(mReceiver, intentFilter);
-
+        if(mReceiver == null) {
+            mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+            registerReceiver(mReceiver, intentFilter);
+        }
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-
-                WifiP2pManager.PeerListListener myPeerListListener;
-
-                Log.i(TAG, "WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION");
-//                if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-//
-//                    // request available peers from the wifi p2p manager. This is an
-//                    // asynchronous call and the calling activity is notified with a
-//                    // callback on PeerListListener.onPeersAvailable()
-//                    if (mManager != null) {
-//                        mManager.requestPeers(mChannel, myPeerListListener);
-//                    }
-//                }
-
+                //...
             }
 
             @Override
             public void onFailure(int reasonCode) {
+                //...
             }
         });
 
-       // ...
+
 
         WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
 
@@ -92,17 +80,32 @@ public class ReceiverActivity extends AppCompatActivity {
                     Log.d(TAG, "No devices found");
                     return;
                 }
+                else {
+                    Log.i(TAG, "Peers were found");
+                }
             }
-        }
+        };
 
-
+//        if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
+//
+//            // request available peers from the wifi p2p manager. This is an
+//            // asynchronous call and the calling activity is notified with a
+//            // callback on PeerListListener.onPeersAvailable()
+//            if (mManager != null) {
+//                mManager.requestPeers(mChannel, myPeerListListener);
+//            }
+//        }
     }
 
     /* unregister the broadcast receiver */
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mReceiver);
+        //unregisterReceiver(mReceiver);
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+            mReceiver = null;
+        }
     }
 
     public void connect() {

@@ -1,15 +1,15 @@
 package com.direyorkie.idolscanner;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -45,14 +45,18 @@ public class MessageServerAsyncTask extends AsyncTask <String, Void, String> {
                     + context.getPackageName() + "/wifip2pshared-" + System.currentTimeMillis()
                     + ".jpg");
 
+           // String messageFromClient = client.getInputStream();
+
 //            File dirs = new File(f.getParent());
 //            if (!dirs.exists())
 //                dirs.mkdirs();
 //            f.createNewFile();
-//            InputStream inputstream = client.getInputStream();
+            InputStream inputstream = client.getInputStream();
+            String msgFromClient = inputstream.toString();
+            Log.i("MESSAGE FROM CLIENT", msgFromClient);
 //            copyFile(inputstream, new FileOutputStream(f));
             serverSocket.close();
-            return f.getAbsolutePath();
+            return msgFromClient;
         } catch (IOException e) {
            // Log.e(WiFiDirectActivity.TAG, e.getMessage());
             return null;
@@ -65,11 +69,11 @@ public class MessageServerAsyncTask extends AsyncTask <String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         if (result != null) {
-            statusText.setText("File copied - " + result);
-            Intent intent = new Intent();
-            intent.setAction(android.content.Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.parse("file://" + result), "image/*");
-            context.startActivity(intent);
+            statusText.setText("Message received: " + result);
+//            Intent intent = new Intent();
+//            intent.setAction(android.content.Intent.ACTION_VIEW);
+//            intent.setDataAndType(Uri.parse("file://" + result), "image/*");
+//            context.startActivity(intent);
         }
     }
 
