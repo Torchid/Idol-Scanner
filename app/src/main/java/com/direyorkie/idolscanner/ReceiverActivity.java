@@ -4,15 +4,11 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.TextView;
 
 public class ReceiverActivity extends AppCompatActivity {
 
@@ -22,6 +18,8 @@ public class ReceiverActivity extends AppCompatActivity {
     WifiP2pManager.Channel mChannel;
     private final String TAG = AppCompatActivity.class.getSimpleName();
 
+    TextView connMsgText, receiveMsgText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +27,9 @@ public class ReceiverActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        connMsgText = (TextView) findViewById(R.id.connection_msg);
+        receiveMsgText = (TextView) findViewById(R.id.receiver_msg);
 
         //  Indicates a change in the Wi-Fi P2P status.
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -98,6 +99,10 @@ public class ReceiverActivity extends AppCompatActivity {
                 //failure logic
             }
         });
+    }
+
+    public void writeMsg(String msg) {
+        connMsgText.setText(msg);
     }
 
 }

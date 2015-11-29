@@ -76,10 +76,17 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
                 if (peers.size() == 0) {
                     Log.d(TAG, "No devices found");
+                    mActivity.writeMsg("No devices found");
                     return;
                 }
                 else {
                     Log.i(TAG, "Peers were found");
+                    String msg = "";
+                    for (int i = 0; i < peers.size(); i++) {
+                        msg = msg + " " + peers.get(i).toString();
+                    }
+
+                    mActivity.writeMsg("Peers were found: \n\n" + msg);
                 }
             }
         };
