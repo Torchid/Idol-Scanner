@@ -2,16 +2,16 @@
     <string name="app_name">Idol Scanner</string>
 
     <!--Interface Labels-->
-    <string name="idol_0">Idol 0</string>
-    <string name="idol_1">Idol 1</string>
-    <string name="idol_2">Idol 2</string>
-    <string name="receiver">Receiver</string>
+    <string name="idol_0">Lilith Altar</string>
+    <string name="idol_1">Asmodeus Altar</string>
+    <string name="idol_2">Mammon Altar</string>
+    <string name="receiver">Demon Gate</string>
     <string name="scanning">Scanning for NFC tag...</string>
 
     <!--Keywords-->
-    <string name="key0">ghost</string>
-    <string name="key1">dragon</string>
-    <string name="key2">witch</string>
-    <string name="title_activity_receiver">ReceiverActivity</string>
+    <string name="key0">druid</string>
+    <string name="key1">samurai</string>
+    <string name="key2">valkyrie</string>
+    <string name="title_activity_receiver">Demon Gate</string>
     <string name="title_activity_scanner">ScannerActivity</string>
 </resources>
