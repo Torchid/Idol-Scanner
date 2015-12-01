@@ -26,7 +26,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-public class ScannerActivity extends AppCompatActivity {
+public class ScannerActivity extends ActivityParent {
 
     private final String INTENT_MSG = "123";
     private final String TAG = AppCompatActivity.class.getSimpleName();

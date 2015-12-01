@@ -19,6 +19,7 @@ package com.direyorkie.idolscanner;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
@@ -33,11 +34,11 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
-    private ReceiverActivity mActivity;
+    private ActivityParent mActivity;
     private final String TAG = WiFiDirectBroadcastReceiver.class.getSimpleName();
 
     public WiFiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel,
-                                       ReceiverActivity activity) {
+                                       ActivityParent activity) {
         super();
         this.mManager = manager;
         this.mChannel = channel;
@@ -66,7 +67,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
         WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
 
-            List peers = new ArrayList();
+            List<WifiP2pDevice> peers = new ArrayList();
             @Override
             public void onPeersAvailable(WifiP2pDeviceList peerList) {
 
@@ -76,17 +77,18 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
                 if (peers.size() == 0) {
                     Log.d(TAG, "No devices found");
-                    mActivity.writeMsg("No devices found");
+                     //   mActivity.writeMsg("No devices found");
                     return;
                 }
                 else {
                     Log.i(TAG, "Peers were found");
                     String msg = "";
                     for (int i = 0; i < peers.size(); i++) {
-                        msg = msg + " " + peers.get(i).toString();
+                        msg = msg + " " + peers.get(i).toString() + "\n\n";
+                        mActivity.connect(peers.get(i));
                     }
 
-                    mActivity.writeMsg("Peers were found: \n\n" + msg);
+                   // mActivity.writeMsg("Peers were found: \n\n" + msg);
                 }
             }
         };
