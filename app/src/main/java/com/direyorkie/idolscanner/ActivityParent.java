@@ -76,5 +76,6 @@ public class ActivityParent extends AppCompatActivity {
     }
 
     protected  void connect(WifiP2pDevice device) {}
+    protected void prepareToConnect() {}
 
 }

@@ -83,6 +83,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                 else {
                     Log.i(TAG, "Peers were found");
                     String msg = "";
+                    mActivity.prepareToConnect();
                     for (int i = 0; i < peers.size(); i++) {
                         msg = msg + " " + peers.get(i).toString() + "\n\n";
                         mActivity.connect(peers.get(i));

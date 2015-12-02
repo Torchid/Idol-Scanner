@@ -1,15 +1,14 @@
 package com.direyorkie.idolscanner;
 
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcF;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +16,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -137,7 +138,7 @@ public class ScannerActivity extends ActivityParent {
             if(msg != "")
             {
                 tagDataText.setText("KeyWord: " + msg);
-                sendMsg(msg);
+                (new SendMsgAsync(this, msg)).execute();
             }
 
         }
@@ -169,57 +170,67 @@ public class ScannerActivity extends ActivityParent {
         return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, StandardCharsets.UTF_8);
     }
 
-    public void sendMsg(String msg) {
-        Context context = this.getApplicationContext();
-        String host;
-        int port;
-        int len;
-        Socket socket = new Socket();
-        byte buf[]  = new byte[1024];
-        //...
-        try {
-            /**
-             * Create a client socket with the host,
-             * port, and timeout information.
-             */
-            socket.bind(null);
-            //socket.connect((new InetSocketAddress(host, port)), 500);
+    public class SendMsgAsync extends AsyncTask <Void, Void, Void> {
 
-            /**
-             * Create a byte stream from a JPEG file and pipe it to the output stream
-             * of the socket. This data will be retrieved by the server device.
-             */
-            OutputStream outputStream = socket.getOutputStream();
-            ContentResolver cr = context.getContentResolver();
-            InputStream inputStream = null;
-            inputStream = cr.openInputStream(Uri.parse("path/to/picture.jpg"));
-            while ((len = inputStream.read(buf)) != -1) {
-                outputStream.write(buf, 0, len);
-            }
-            outputStream.close();
-            inputStream.close();
-        } catch (FileNotFoundException e) {
-            //catch logic
-        } catch (IOException e) {
-            //catch logic
+        private Context context;
+        private String msgText;
+
+        public SendMsgAsync(Context context, String msgText) {
+            this.context = context;
+            this.msgText = msgText;
         }
 
-        /**
-         * Clean up any open sockets when done
-         * transferring or if an exception occurred.
-         */
-        finally {
-            if (socket != null) {
-                if (socket.isConnected()) {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        //catch logic
+        protected Void doInBackground(Void... params) {
+            String host = "172.16.1.77";
+            int port = 8988;
+            int len;
+            Socket socket = new Socket();
+            byte buf[]  = new byte[1024];
+            //...
+            try {
+                /**
+                 * Create a client socket with the host,
+                 * port, and timeout information.
+                 */
+                socket.bind(null);
+                socket.connect((new InetSocketAddress(host, port)), 500);
+
+                /**
+                 * Create a byte stream from a JPEG file and pipe it to the output stream
+                 * of the socket. This data will be retrieved by the server device.
+                 */
+                OutputStream outputStream = socket.getOutputStream();
+                InputStream inputStream = new ByteArrayInputStream(msgText.getBytes(StandardCharsets.UTF_8));
+
+                while ((len = inputStream.read(buf)) != -1) {
+                    outputStream.write(buf, 0, len);
+                }
+                outputStream.close();
+                inputStream.close();
+            } catch (FileNotFoundException e) {
+                //catch logic
+            } catch (IOException e) {
+                //catch logic
+            }
+
+            /**
+             * Clean up any open sockets when done
+             * transferring or if an exception occurred.
+             */
+            finally {
+                if (socket != null) {
+                    if (socket.isConnected()) {
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                            //catch logic
+                        }
                     }
                 }
             }
+
+            return null;
         }
     }
-
 
 }

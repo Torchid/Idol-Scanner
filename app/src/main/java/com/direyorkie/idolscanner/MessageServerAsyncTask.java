@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import java.io.File;
@@ -21,7 +20,7 @@ public class MessageServerAsyncTask extends AsyncTask <String, Void, String> {
     private Context context;
     private TextView statusText;
 
-    public MessageServerAsyncTask(Context context, View statusText) {
+    public MessageServerAsyncTask(Context context, TextView statusText) {
         this.context = context;
         this.statusText = (TextView) statusText;
     }
@@ -34,7 +33,7 @@ public class MessageServerAsyncTask extends AsyncTask <String, Void, String> {
              * Create a server socket and wait for client connections. This
              * call blocks until a connection is accepted from a client
              */
-            ServerSocket serverSocket = new ServerSocket(8888);
+            ServerSocket serverSocket = new ServerSocket(8988);
             Socket client = serverSocket.accept();
 
             /**
