@@ -44,20 +44,15 @@ public class MessageServerAsyncTask extends AsyncTask <String, Void, String> {
                     + context.getPackageName() + "/wifip2pshared-" + System.currentTimeMillis()
                     + ".jpg");
 
-           // String messageFromClient = client.getInputStream();
-
-//            File dirs = new File(f.getParent());
-//            if (!dirs.exists())
-//                dirs.mkdirs();
-//            f.createNewFile();
             InputStream inputstream = client.getInputStream();
-            String msgFromClient = inputstream.toString();
+            byte[] data = new byte[100];
+            inputstream.read(data);
+
+            String msgFromClient = new String(data, "UTF-8");
             Log.i("MESSAGE FROM CLIENT", msgFromClient);
-//            copyFile(inputstream, new FileOutputStream(f));
             serverSocket.close();
             return msgFromClient;
         } catch (IOException e) {
-           // Log.e(WiFiDirectActivity.TAG, e.getMessage());
             return null;
         }
     }
