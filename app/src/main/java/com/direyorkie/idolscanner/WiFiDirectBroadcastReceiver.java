@@ -77,6 +77,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
                 if (peers.size() == 0) {
                     Log.d(TAG, "No devices found");
+                    Log.d(TAG, "No devices found");
                      //   mActivity.writeMsg("No devices found");
                     return;
                 }

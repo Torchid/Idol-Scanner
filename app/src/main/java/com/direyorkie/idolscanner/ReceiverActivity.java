@@ -14,6 +14,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +47,7 @@ public class ReceiverActivity extends ActivityParent {
         WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
-        writeMsg(ip);
+        //writeMsg(ip);
     }
 
     @Override
@@ -66,9 +68,7 @@ public class ReceiverActivity extends ActivityParent {
             @Override
             public void onSuccess() {
                 CharSequence text = "Create group successful!";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast.makeText(getApplicationContext(), text, duration).show();
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -154,7 +154,7 @@ public class ReceiverActivity extends ActivityParent {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                passMsgText.setText("Message received: " + result);
+                //passMsgText.setText("Message received: " + result);
                 setPassword(result);
                // context.getApplicationContext().
                 setPassword(result);
@@ -173,7 +173,10 @@ public class ReceiverActivity extends ActivityParent {
                 case "mammon":
                     mammonPass = idolPass[1].trim();
             }
-            connMsgText.setText(lilithPass + " " + asmodeusPass + " " + mammonPass);
+            //connMsgText.setText(lilithPass + " " + asmodeusPass + " " + mammonPass);
+            String capitalizedHero = WordUtils.capitalize(idolPass[1]);
+            CharSequence text = capitalizedHero + ": Aaaaaaaaaaaaaaaaaah!";
+            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             checkPasswords();
         }
 
