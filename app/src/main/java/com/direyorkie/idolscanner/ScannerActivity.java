@@ -31,7 +31,7 @@ public class ScannerActivity extends ActivityParent {
 
     private final String INTENT_MSG = "123";
     private final String TAG = AppCompatActivity.class.getSimpleName();
-    private int idolID;
+    private String idolID;
 
     private NfcAdapter mAdapter;
     private PendingIntent mPendingIntent;
@@ -49,6 +49,9 @@ public class ScannerActivity extends ActivityParent {
         setContentView(R.layout.activity_scanner);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Intent intent = getIntent();
+        idolID = intent.getStringExtra(INTENT_MSG);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -138,7 +141,7 @@ public class ScannerActivity extends ActivityParent {
             if(msg != "")
             {
                 tagDataText.setText("KeyWord: " + msg);
-                (new SendMsgAsync(this, msg)).execute();
+                (new SendMsgAsync(this, idolID + ":" + msg)).execute();
             }
 
         }

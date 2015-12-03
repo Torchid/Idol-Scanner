@@ -19,7 +19,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setupIdol(View v) {
-        String idolID = (String) ((Button) v).getText();
+        String buttonText = (String) ((Button) v).getText();
+        String idolID = "";
+
+        if(buttonText.equals(getString(R.string.idol_0))) {
+            idolID = Constants.IDOL0;
+        }
+        else if (buttonText.equals(getString(R.string.idol_1))){
+            idolID = Constants.IDOL1;
+        }
+        else {
+            idolID = Constants.IDOL2;
+        }
+
         Log.i(TAG, "Set up idol " + idolID);
 
         Intent scannerIntent = new Intent(this, ScannerActivity.class);
