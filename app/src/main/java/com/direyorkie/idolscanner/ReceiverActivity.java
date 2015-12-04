@@ -1,6 +1,8 @@
 package com.direyorkie.idolscanner;
 
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -40,6 +42,10 @@ public class ReceiverActivity extends ActivityParent {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().hide();
+
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 10, 0);
 
         connMsgText = (TextView) findViewById(R.id.connection_msg);
         passMsgText = (TextView) findViewById(R.id.password_msg);
@@ -174,9 +180,12 @@ public class ReceiverActivity extends ActivityParent {
                     mammonPass = idolPass[1].trim();
             }
             //connMsgText.setText(lilithPass + " " + asmodeusPass + " " + mammonPass);
+
             String capitalizedHero = WordUtils.capitalize(idolPass[1]);
             CharSequence text = capitalizedHero + ": Aaaaaaaaaaaaaaaaaah!";
             Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            MediaPlayer mPlayer = MediaPlayer.create(context, R.raw.scream);
+            mPlayer.start();
             checkPasswords();
         }
 
