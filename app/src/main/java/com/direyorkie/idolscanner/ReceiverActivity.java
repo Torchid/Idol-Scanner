@@ -207,6 +207,9 @@ public class ReceiverActivity extends ActivityParent {
                     mammonPass.equals(getString(R.string.key2))) {
                     mPassMsgText.setText(COMBINATION);
             }
+            else{
+                mPassMsgText.setText("");
+            }
 
         }
 
