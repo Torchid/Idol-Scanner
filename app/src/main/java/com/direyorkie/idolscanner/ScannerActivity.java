@@ -38,7 +38,8 @@ public class ScannerActivity extends ActivityParent {
     private PendingIntent mPendingIntent;
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
-    private TextView scanMsgText,
+    private TextView altarNameText,
+                     scanMsgText,
                      tagMsgText,
                      tagDataText,
                      sendMsgText;
@@ -66,6 +67,8 @@ public class ScannerActivity extends ActivityParent {
 
         scanMsgText.setText(R.string.scanning);
 
+        altarNameText.setText(idolID);
+
         setupNFCIntentFiltering();
     }
 
@@ -85,6 +88,7 @@ public class ScannerActivity extends ActivityParent {
 
     private void setupContainerViews() {
         //Grab all container views from the layout
+        altarNameText = (TextView) findViewById(R.id.altar_name);
         scanMsgText = (TextView) findViewById(R.id.scan_msg);
         tagMsgText = (TextView) findViewById(R.id.tag_msg);
         tagDataText = (TextView) findViewById(R.id.tag_data);
