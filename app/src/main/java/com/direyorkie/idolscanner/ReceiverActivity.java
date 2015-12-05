@@ -25,14 +25,12 @@ import java.net.Socket;
 
 public class ReceiverActivity extends ActivityParent {
 
-    TextView connMsgText, passMsgText;
+    public TextView connMsgText, passMsgText;
+    public final String COMBINATION = "RSTYX";
 
     public String lilithPass,
             asmodeusPass,
             mammonPass;
-
-
-    public String combination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,6 @@ public class ReceiverActivity extends ActivityParent {
         lilithPass = "";
         asmodeusPass = "";
         mammonPass = "";
-        combination = "RSTYX";
 
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 10, 0);
@@ -118,10 +115,6 @@ public class ReceiverActivity extends ActivityParent {
         });
     }
 
-    public void writeMsg(String msg) {
-        connMsgText.setText(msg);
-    }
-
     public class MessageServerAsyncTask extends AsyncTask<Void, Void, String> {
 
         private Context context;
@@ -184,19 +177,18 @@ public class ReceiverActivity extends ActivityParent {
             switch(idolPass[0]){
                 case "lilith":
                     lilithPass = idolPass[1].trim();
-                    CharSequence text0 = "Set lilith to " + idolPass[1].trim();
-                    Toast.makeText(getApplicationContext(), text0, Toast.LENGTH_SHORT).show();
-
+//                    CharSequence text0 = "Set lilith to " + idolPass[1].trim();
+//                    Toast.makeText(getApplicationContext(), text0, Toast.LENGTH_SHORT).show();
                     break;
                 case "asmodeus":
                     asmodeusPass = idolPass[1].trim();
-                    CharSequence text1 = "Set asmodeus to " + idolPass[1].trim();
-                    Toast.makeText(getApplicationContext(), text1, Toast.LENGTH_SHORT).show();
+//                    CharSequence text1 = "Set asmodeus to " + idolPass[1].trim();
+//                    Toast.makeText(getApplicationContext(), text1, Toast.LENGTH_SHORT).show();
                     break;
                 case "mammon":
                     mammonPass = idolPass[1].trim();
-                    CharSequence text2 = "Set mammon to " + idolPass[1].trim();
-                    Toast.makeText(getApplicationContext(), text2, Toast.LENGTH_SHORT).show();
+//                    CharSequence text2 = "Set mammon to " + idolPass[1].trim();
+//                    Toast.makeText(getApplicationContext(), text2, Toast.LENGTH_SHORT).show();
             }
             //connMsgText.setText(lilithPass + " " + asmodeusPass + " " + mammonPass);
 
@@ -210,10 +202,10 @@ public class ReceiverActivity extends ActivityParent {
         }
 
         public void checkPasswords(){
-            if(lilithPass.equals("druid") &&
-                    asmodeusPass.equals("samurai") &&
-                    mammonPass.equals("valkyrie")) {
-                    mPassMsgText.setText(combination);
+            if(lilithPass.equals(getString(R.string.key0)) &&
+                    asmodeusPass.equals(getString(R.string.key1)) &&
+                    mammonPass.equals(getString(R.string.key2))) {
+                    mPassMsgText.setText(COMBINATION);
             }
 
         }
