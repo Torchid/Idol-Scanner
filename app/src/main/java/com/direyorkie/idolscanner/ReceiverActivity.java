@@ -3,7 +3,6 @@ package com.direyorkie.idolscanner;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -11,8 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.widget.Toolbar;
-import android.text.format.Formatter;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,14 +25,14 @@ import java.net.Socket;
 
 public class ReceiverActivity extends ActivityParent {
 
-
     TextView connMsgText, passMsgText;
 
-    private final String COMBINATION = "3456";
+    public String lilithPass,
+            asmodeusPass,
+            mammonPass;
 
-    String lilithPass = "",
-            asmodeusPass = "",
-            mammonPass = "";
+
+    public String combination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +43,26 @@ public class ReceiverActivity extends ActivityParent {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().hide();
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        lilithPass = "";
+        asmodeusPass = "";
+        mammonPass = "";
+        combination = "RSTYX";
+
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 10, 0);
 
         connMsgText = (TextView) findViewById(R.id.connection_msg);
         passMsgText = (TextView) findViewById(R.id.password_msg);
 
-        WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
-        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        passMsgText.setText("");
+
+       // WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
+       // String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
         //writeMsg(ip);
     }
@@ -90,7 +101,7 @@ public class ReceiverActivity extends ActivityParent {
         config.deviceAddress = device.deviceAddress;
 
 //        //success logic
-        MessageServerAsyncTask msgServerAsyncTask = new MessageServerAsyncTask(this, connMsgText, passMsgText);
+        MessageServerAsyncTask msgServerAsyncTask = new MessageServerAsyncTask(this, passMsgText);
         msgServerAsyncTask.execute();
 
         mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
@@ -114,12 +125,12 @@ public class ReceiverActivity extends ActivityParent {
     public class MessageServerAsyncTask extends AsyncTask<Void, Void, String> {
 
         private Context context;
-        TextView connMsgText, passMsgText;
+        private ReceiverActivity ra;
+        TextView mPassMsgText;
 
-        public MessageServerAsyncTask(Context context, TextView connMsgText, TextView passMsgText) {
+        public MessageServerAsyncTask(Context context, TextView newPassMsgText) {
             this.context = context;
-            this.connMsgText = connMsgText;
-            this.passMsgText = passMsgText;
+            this.mPassMsgText = newPassMsgText;
         }
 
         @Override
@@ -161,8 +172,9 @@ public class ReceiverActivity extends ActivityParent {
         protected void onPostExecute(String result) {
             if (result != null) {
                 //passMsgText.setText("Message received: " + result);
-                setPassword(result);
+             //   setPassword(result);
                // context.getApplicationContext().
+               // checkPasswords();
                 setPassword(result);
             }
         }
@@ -172,31 +184,40 @@ public class ReceiverActivity extends ActivityParent {
             switch(idolPass[0]){
                 case "lilith":
                     lilithPass = idolPass[1].trim();
+                    CharSequence text0 = "Set lilith to " + idolPass[1].trim();
+                    Toast.makeText(getApplicationContext(), text0, Toast.LENGTH_SHORT).show();
+
                     break;
                 case "asmodeus":
                     asmodeusPass = idolPass[1].trim();
+                    CharSequence text1 = "Set asmodeus to " + idolPass[1].trim();
+                    Toast.makeText(getApplicationContext(), text1, Toast.LENGTH_SHORT).show();
                     break;
                 case "mammon":
                     mammonPass = idolPass[1].trim();
+                    CharSequence text2 = "Set mammon to " + idolPass[1].trim();
+                    Toast.makeText(getApplicationContext(), text2, Toast.LENGTH_SHORT).show();
             }
             //connMsgText.setText(lilithPass + " " + asmodeusPass + " " + mammonPass);
+
+            checkPasswords();
 
             String capitalizedHero = WordUtils.capitalize(idolPass[1]);
             CharSequence text = capitalizedHero + ": Aaaaaaaaaaaaaaaaaah!";
             Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             MediaPlayer mPlayer = MediaPlayer.create(context, R.raw.scream);
             mPlayer.start();
-            checkPasswords();
         }
 
         public void checkPasswords(){
-            if(lilithPass.equals(getString(R.string.key0)) &&
-                    asmodeusPass.equals((getString(R.string.key1))) &&
-                    mammonPass.equals(getString(R.string.key2))) {
-                passMsgText.setText(COMBINATION);
+            if(lilithPass.equals("druid") &&
+                    asmodeusPass.equals("samurai") &&
+                    mammonPass.equals("valkyrie")) {
+                    mPassMsgText.setText(combination);
             }
 
         }
 
     }
+
 }

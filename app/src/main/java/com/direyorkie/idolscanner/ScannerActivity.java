@@ -14,6 +14,7 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
@@ -49,6 +50,12 @@ public class ScannerActivity extends ActivityParent {
         setContentView(R.layout.activity_scanner);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().hide();
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         Intent intent = getIntent();
         idolID = intent.getStringExtra(INTENT_MSG);

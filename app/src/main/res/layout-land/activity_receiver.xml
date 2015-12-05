@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="60dp"
+                android:paddingTop="30dp"
                 android:paddingBottom="30dp"
                 android:textColor="@color/gateText" />
         </LinearLayout>
