@@ -75,10 +75,6 @@ public class ReceiverActivity extends ActivityParent {
         super.onPause();
     }
 
-    @Override
-    public void onBackPressed() {
-    }
-
     protected void prepareToConnect() {
         mManager.createGroup(mChannel, new WifiP2pManager.ActionListener() {
 

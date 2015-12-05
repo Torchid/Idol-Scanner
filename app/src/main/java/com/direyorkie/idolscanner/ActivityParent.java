@@ -75,6 +75,10 @@ public class ActivityParent extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+    }
+
     protected  void connect(WifiP2pDevice device) {}
     protected void prepareToConnect() {}
 
